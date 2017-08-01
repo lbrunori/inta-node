@@ -1,25 +1,28 @@
 {
-  "name": "inta",
-  "version": "1.0.0",
-  "description": "Administración de publicaciones para INTA MS JZ.",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon index.js",
-    "test": "mocha server/**/*.test.js",
-    "test-watch": "nodemon --exec 'npm test'"
-  },
-  "author": "LBrunori",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.17.2",
-    "express": "^4.15.3",
-    "mongodb": "^2.2.30",
-    "mongoose": "^4.11.1"
-  },
-  "devDependencies": {
-    "expect": "^1.20.2",
-    "mocha": "^3.4.2",
-    "nodemon": "^1.11.0",
-    "supertest": "^3.0.0"
-  }
+    "name": "inta",
+    "version": "1.0.0",
+    "description": "Administración de publicaciones para INTA MS JZ.",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon server/server.js",
+        "test": "mocha server/**/*.test.js",
+        "test-watch": "nodemon --exec 'npm test'"
+    },
+    "author": "LBrunori",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.17.2",
+        "crypto-js": "^3.1.9-1",
+        "express": "^4.15.3",
+        "jsonwebtoken": "^7.4.1",
+        "mongodb": "^2.2.30",
+        "mongoose": "^4.11.1",
+        "validator": "^8.0.0"
+    },
+    "devDependencies": {
+        "expect": "^1.20.2",
+        "mocha": "^3.4.2",
+        "nodemon": "^1.11.0",
+        "supertest": "^3.0.0"
+    }
 }
