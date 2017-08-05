@@ -1,5 +1,5 @@
-let { ObjectID } = require('mongodb');
-const { Publicacion } = require('./../../model/publications/publicacion');
+const { ObjectID } = require('mongodb');
+const { Publicacion } = require('./../../model/publications/publicacion.model');
 
 let savePublicacion = (req, res) => {
     let publicacion = new Publicacion({

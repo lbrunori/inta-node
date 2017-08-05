@@ -1,16 +1,18 @@
-let express = require('express');
-let bodyParser = require('body-parser');
-let { ObjectID } = require('mongodb');
+const express = require('express');
+const bodyParser = require('body-parser');
+const { ObjectID } = require('mongodb');
 
-let { mongoose } = require('./db/mongoose');
-let { PublicacionView } = require('./view/publications/publicacion.view')
+const { mongoose } = require('./db/mongoose');
+const { PublicacionView } = require('./view/publications/publicacion.view')
+const { UsuarioView } = require('./view/users/usuario.view');
 
-app = express();
+let app = express();
 
 app.use(bodyParser.json());
 
 
-app.use('/api', PublicacionView);
+app.use('/api', PublicacionView)
+    .use('/api', UsuarioView);
 
 app.listen(3000, () => {
     console.log('Started on port 3000');

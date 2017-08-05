@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const Schema = mongoose.Schema;
 
-const { Rol } = require('./rol');
 
-let UsuarioSchema = new mongoose.Schema({
+let UsuarioSchema = new Schema({
     nombre: {
         required: true,
         trim: true,
@@ -24,14 +24,9 @@ let UsuarioSchema = new mongoose.Schema({
         unique: true,
         trim: true,
         validate: {
-            validator: validator.isEmail
-        },
-        message: '{VALUE} is not a valid name.'
-    },
-    rol: {
-        type: Rol,
-        required: true
-
+            validator: validator.isEmail,
+            message: '{VALUE} no es un email válido.'
+        }
     },
     password: {
         type: String,

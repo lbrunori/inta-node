@@ -5,7 +5,10 @@ const PublicacionController = require('./../../controller/publications/publicaci
 
 PublicacionView.
     route('/publicaciones').
-    post(PublicacionController.savePublicacion).
+    post(PublicacionController.savePublicacion);
+
+PublicacionView.
+    route('/publicaciones/:id').
     get(PublicacionController.findById);
 
 module.exports = {
