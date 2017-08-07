@@ -11,7 +11,9 @@ UsuarioView
 UsuarioView
     .route('/usuarios/me')
     .get(authenticate, UsuarioController.userMe);
-
+UsuarioView
+    .route('/usuarios/login')
+    .post(UsuarioController.login);
 
 module.exports = {
     UsuarioView

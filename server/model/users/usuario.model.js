@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 
@@ -57,7 +58,11 @@ UsuarioSchema.methods.toJSON = function () {
 UsuarioSchema.methods.generateAuthToken = function () {
     var user = this;
     var access = 'auth';
-    var token = jwt.sign({ _id: user._id.toHexString(), access }, 'abc123').toString();
+    var token = jwt.sign(
+        {
+            _id: user._id.toHexString(),
+            access
+        }, 'abc123', { expiresIn: 60 * 60 * 24 }).toString();
 
     user.tokens.push({ access, token });
 
@@ -73,7 +78,6 @@ UsuarioSchema.statics.findByToken = function (token) {
     try {
         decoded = jwt.verify(token, 'abc123');
     } catch (error) {
-        console.error(error);
         return Promise.reject();
     }
 
@@ -84,6 +88,45 @@ UsuarioSchema.statics.findByToken = function (token) {
     });
 
 }
+
+UsuarioSchema.statics.findByCredentials = function (email, password) {
+
+    let Usuario = this;
+
+    return Usuario.findOne({ email })
+        .then((usuario) => {
+            if (!usuario) {
+                return Promise.reject();
+            }
+
+            return new Promise((resolve, reject) => {
+                bcrypt.compare(password, usuario.password, (err, res) => {
+                    if (res) {
+                        resolve(usuario);
+                    } else {
+                        reject();
+                    }
+                })
+            })
+        })
+}
+
+
+
+UsuarioSchema.pre('save', function (next) {
+    let usuario = this;
+
+    if (usuario.isModified('password')) {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(usuario.password, salt, (err, hash) => {
+                usuario.password = hash;
+                next();
+            })
+        })
+    } else {
+        next();
+    }
+});
 
 
 let Usuario = mongoose.model('Usuario', UsuarioSchema)
