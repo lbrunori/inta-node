@@ -10,7 +10,6 @@ let app = express();
 
 app.use(bodyParser.json());
 
-
 app.use('/api', PublicacionView)
     .use('/api', UsuarioView);
 
