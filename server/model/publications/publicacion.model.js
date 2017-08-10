@@ -1,30 +1,28 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// const { Usuario } = require('../users/usuario')
-// const { Imagen } = require('./imagen')
-// const { TipoPublicacion } = require('./tipo-publicacion');
 
 let PublicacionSchema = new Schema({
-    // creador: {
-    //     type: Usuario,
-    //     required: true
-    // },
-    // fechaCreacion: {
-    //     type: Date,
-    //     default: Date.now
-    // },
-    // fechaFinalizacion: {
-    //     type: Date,
-    // },
-    // imagenes: {
-    //     type: [Imagen],
-    //     required: false
-    // },
-    // imagenPortado: {
-    //     type: Imagen,
-    //     required: true
-    // },
+    creador: {
+        type: Schema.ObjectId,
+        ref: 'Usuario',
+        required: true
+    },
+    fechaCreacion: {
+        type: Date,
+        default: Date.now
+    },
+    fechaFinalizacion: {
+        type: Date,
+    },
+    imagenes: {
+        type: String,
+        required: false
+    },
+    imagenPortada: {
+        type: String,
+        required: true
+    },
     titulo: {
         type: String,
         required: true,
@@ -38,19 +36,20 @@ let PublicacionSchema = new Schema({
         trim: true,
         minlength: 10,
         maxlength: 255
+    },
+    contenido: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 10
+    },
+    tipoPublicacion: {
+        type: Schema.ObjectId,
+        ref: 'TipoPublicacion',
+        required: true
     }
-    // contenido: {
-    //     type: String,
-    //     required: true,
-    //     trim: true,
-    //     minlength: 10
-    // },
-    // tipoPublicacion: {
-    //     required: true,
-    //     type: TipoPublicacion
-    // }
 })
 
-let Publicacion = mongoose.model('Publicacion', PublicacionSchema);
+let PublicacionModel = mongoose.model('Publicacion', PublicacionSchema);
 
-module.exports = { Publicacion } 
+module.exports = { PublicacionModel } 

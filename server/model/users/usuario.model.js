@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 
+const { Rol } = require('./rol.model')
+
 const Schema = mongoose.Schema;
 
 let UsuarioSchema = new Schema({
@@ -35,6 +37,10 @@ let UsuarioSchema = new Schema({
         type: String,
         required: true,
         minlength: 6
+    },
+    rol: {
+        type: Schema.ObjectId,
+        ref: 'Rol'
     },
     tokens: [{
         access: {
@@ -111,8 +117,6 @@ UsuarioSchema.statics.findByCredentials = function (email, password) {
         })
 }
 
-
-
 UsuarioSchema.pre('save', function (next) {
     let usuario = this;
 
@@ -129,6 +133,6 @@ UsuarioSchema.pre('save', function (next) {
 });
 
 
-let Usuario = mongoose.model('Usuario', UsuarioSchema)
+let UsuarioModel = mongoose.model('Usuario', UsuarioSchema)
 
-module.exports = { Usuario };
+module.exports = { UsuarioModel };

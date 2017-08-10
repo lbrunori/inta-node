@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-let Publicacion = mongoose.model('Publicacion', {
+let ImagenModel = mongoose.model('Publicacion', {
     nombre: {
         type: String,
         required: true,
@@ -17,4 +17,4 @@ let Publicacion = mongoose.model('Publicacion', {
     }
 })
 
-module.exports = { Publicacion }
+module.exports = { ImagenModel }

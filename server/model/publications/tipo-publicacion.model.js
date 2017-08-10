@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 
-let Imagen = mongoose.model('Imagen', {
+let TipoPublicacionModel = mongoose.model('TipoPublicacion', {
     contenido: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        lowercase: true
     }
 })
+
+module.exports = {
+    TipoPublicacionModel
+}

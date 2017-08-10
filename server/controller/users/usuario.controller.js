@@ -1,7 +1,6 @@
 const { ObjectID } = require('mongodb');
-const { Usuario } = require('./../../model/users/usuario.model');
+const Usuario = require('./../../model/users/usuario.model').UsuarioModel;
 const { _ } = require('lodash');
-const bcrypt = require('bcryptjs');
 
 /**
  * Crea un nuevo usuario en la base de datos.
@@ -11,7 +10,7 @@ const bcrypt = require('bcryptjs');
  */
 let saveUsuario = (req, res) => {
 
-    let body = _.pick(req.body, ['nombre', 'apellido', 'email', 'password']);
+    let body = _.pick(req.body, ['nombre', 'apellido', 'email', 'password', 'rol']);
     let usuario = new Usuario(body);
 
     usuario.save().then(() => {
@@ -37,6 +36,62 @@ let login = (req, res) => {
         });
 }
 
+let updateUsuario = (req, res) => {
+    let id = req.params.id;
+    let body = _.pick(req.body, ['nombre', 'apellido', 'email', 'password', 'rol']);
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    Usuario.findByIdAndUpdate(id, { $set: body }, { new: true }).then((usuario) => {
+        if (!usuario) {
+            return res.status(404).send();
+        }
+        res.send(usuario);
+    })
+}
+
+let deleteUsuario = (req, res) => {
+    let id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    Usuario.findByIdAndRemove(id).then((usuario) => {
+        if (!usuario) {
+            return res.status(404).send();
+        }
+
+        res.send(usuario);
+    })
+}
+
+let getUsuarios = (req, res) => {
+    Usuario.find().then((usuarios) => {
+        return res.send(usuarios);
+    }).catch((e) => {
+        return res.status(404).send();
+    })
+}
+
+let getUsuario = (req, res) => {
+    let id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    Usuario.findById(id).then((usuario) => {
+        if (!usuario) {
+            return res.status(404).send();
+        }
+
+        return res.send({ usuario });
+    })
+}
+
 /**
  * 
  * @param {*} req 
@@ -49,5 +104,9 @@ let userMe = (req, res) => {
 module.exports = {
     saveUsuario,
     userMe,
-    login
+    login,
+    updateUsuario,
+    deleteUsuario,
+    getUsuarios,
+    getUsuario
 }

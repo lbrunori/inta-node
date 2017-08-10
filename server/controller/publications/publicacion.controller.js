@@ -1,11 +1,12 @@
 const { ObjectID } = require('mongodb');
-const { Publicacion } = require('./../../model/publications/publicacion.model');
+const _ = require('lodash');
+
+const Publicacion = require('./../../model/publications/publicacion.model').PublicacionModel;
 
 let savePublicacion = (req, res) => {
-    let publicacion = new Publicacion({
-        titulo: req.body.titulo,
-        descripcion: req.body.descripcion
-    })
+    let body = _.pick(req.body, ['creador', 'fechaFinalizacion', 'imagenes', 'imagenPortada', 'titulo',
+        'descripcion', 'contenido', 'tipoPublicacion'])
+    let publicacion = new Publicacion(body);
 
     publicacion.save().then((doc) => {
         res.send(doc);
@@ -14,7 +15,7 @@ let savePublicacion = (req, res) => {
     })
 }
 
-let findById = (req, res) => {
+let getPublicacion = (req, res) => {
     var id = req.params.id;
     if (!ObjectID.isValid(id)) {
         return res.statud(404).send("La ID no es válida");
@@ -31,13 +32,24 @@ let findById = (req, res) => {
     })
 }
 
-// TODO: hacer un get todos con paginacion;
-
-let findAllInPage = (res, req) => {
+let getPublicaciones = () => {
 
 }
 
+let deletePublicacion = () => {
+
+}
+
+let updatePublicacion = () => {
+
+}
+
+
+
 module.exports = {
     savePublicacion,
-    findById
+    getPublicacion,
+    getPublicaciones,
+    deletePublicacion,
+    updatePublicacion
 }
