@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 
-const { Rol } = require('./rol.model')
-
 const Schema = mongoose.Schema;
 
 let UsuarioSchema = new Schema({
@@ -68,7 +66,7 @@ UsuarioSchema.methods.generateAuthToken = function () {
         {
             _id: user._id.toHexString(),
             access
-        }, 'abc123', { expiresIn: 60 * 60 * 24 }).toString();
+        }, 'abc123').toString();
 
     user.tokens.push({ access, token });
 

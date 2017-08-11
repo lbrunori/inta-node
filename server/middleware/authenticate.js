@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const { Usuario } = require('./../model/users/usuario.model');
+const Usuario = require('./../model/users/usuario.model').UsuarioModel;
 
 let authenticate = (req, res, next) => {
 

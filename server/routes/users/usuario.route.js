@@ -7,10 +7,9 @@ const usuarioController = require('./../../controller/users/usuario.controller')
 
 UsuarioRouter
     .route('/usuarios')
-    .all(authenticate, hasRolAdmin)
     .post(usuarioController.saveUsuario)
-    .put(usuarioController.updateUsuario)
-    .get(usuarioController.getUsuarios)
+    .put(authenticate, hasRolAdmin, usuarioController.updateUsuario)
+    .get(authenticate, hasRolAdmin, usuarioController.getUsuarios)
 UsuarioRouter
     .route('/usuarios/me')
     .get(authenticate, usuarioController.userMe);

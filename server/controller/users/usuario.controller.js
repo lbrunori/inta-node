@@ -28,7 +28,7 @@ let login = (req, res) => {
     Usuario.findByCredentials(body.email, body.password)
         .then((usuario) => {
             return usuario.generateAuthToken().then((token) => {
-                res.header('x-auth', token).send(usuario);
+                res.header('x-auth', token).json({ token: token, _id: usuario._id });
             });
         })
         .catch((err) => {
