@@ -10,8 +10,9 @@ const
 
 TipoPublicacionRouter
     .route('/tipos-publicacion')
-    .get(authenticate, TipoPublicacionController.getTiposPublicacion)
-
+    .all(authenticate)
+    .get(TipoPublicacionController.getTiposPublicacion)
+    .post(TipoPublicacionController.saveTiposPublicacion)
 module.exports = {
     TipoPublicacionRouter
 }

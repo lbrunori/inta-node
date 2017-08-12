@@ -12,16 +12,12 @@ let PublicacionSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    fechaFinalizacion: {
-        type: Date,
-    },
     imagenes: {
         type: String,
         required: false
     },
     imagenPortada: {
-        type: String,
-        required: true
+        type: String
     },
     titulo: {
         type: String,

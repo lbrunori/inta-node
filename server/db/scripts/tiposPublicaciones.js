@@ -24,4 +24,4 @@ var tipoPublicaciones = [
     }
 ];
 
-db.tipoPublicacions.insert(tipoPublicaciones);
+db.tipopublicacions.insert(tipoPublicaciones);

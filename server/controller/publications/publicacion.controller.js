@@ -18,25 +18,49 @@ let savePublicacion = (req, res) => {
 let getPublicacion = (req, res) => {
     var id = req.params.id;
     if (!ObjectID.isValid(id)) {
-        return res.statud(404).send("La ID no es válida");
+        return res.status(404).send("La ID no es válida");
     }
 
-    Publicacion.findById(id).then((publicacion) => {
-        if (!publicacion) {
-            return res.status(404).send("Elemento no encontrado");
-        }
+    Publicacion.findById(id)
+        .populate('tipoPublicacion')
+        .populate('creador')
+        .exec()
+        .then((publicacion) => {
+            if (!publicacion) {
+                return res.status(404).send("Elemento no encontrado");
+            }
 
-        res.send({ publicacion });
-    }).catch(() => {
-        res.status(400).send();
-    })
+            res.send({ publicacion });
+        }).catch(() => {
+            res.status(400).send();
+        });
 }
 
-let getPublicaciones = () => {
+let getPublicaciones = (req, res) => {
+    Publicacion.find()
+        .populate('tipoPublicacion')
+        .populate('creador')
+        .exec((err, publicaciones) => {
+            if (err) {
+                res.status(401).send()
+            };
 
+            res.send(publicaciones);
+        })
 }
 
-let deletePublicacion = () => {
+let deletePublicacion = (req, res) => {
+    var id = req.params.id;
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send("La ID no es válida");
+    }
+
+    Publicacion.findByIdAndRemove(id)
+        .then((resp) => {
+            res.send();
+        }).catch((err) => {
+            res.status(400).send();
+        });
 
 }
 
