@@ -66,7 +66,7 @@ UsuarioSchema.methods.generateAuthToken = function () {
         {
             _id: user._id.toHexString(),
             access
-        }, 'abc123').toString();
+        }, 'abc123',{expiresIn: 7200 }).toString();
 
     user.tokens.push({ access, token });
 

@@ -17,7 +17,8 @@ let PublicacionSchema = new Schema({
         required: false
     },
     imagenPortada: {
-        type: String
+        type: String,
+        required: true
     },
     titulo: {
         type: String,
