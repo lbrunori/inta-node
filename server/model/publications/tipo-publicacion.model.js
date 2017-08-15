@@ -7,6 +7,11 @@ let TipoPublicacion = new Schema({
         required: true,
         trim: true,
         lowercase: true
+    },
+    nombreDescriptivo: {
+        type: String,
+        required: true,
+        trim: true
     }
 })
 

@@ -8,12 +8,12 @@ const publicacionController = require('./../../controller/publications/publicaci
 PublicacionRouter
     .route('/publicaciones')
     .post(authenticate, publicacionController.savePublicacion)
-    .get(authenticate, publicacionController.getPublicaciones)
+    .get(publicacionController.getPublicaciones)
+    .put(authenticate,publicacionController.updatePublicacion);
 PublicacionRouter
     .route('/publicaciones/:id')
     .get(publicacionController.getPublicacion)
-    .delete(publicacionController.deletePublicacion);
-
+    .delete(authenticate, publicacionController.deletePublicacion)
 module.exports = {
     PublicacionRouter
 }

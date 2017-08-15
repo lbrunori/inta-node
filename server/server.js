@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { mongoose } = require('./db/mongoose');
 const cors = require('cors');
-
+const multer = require('multer');
 
 const { PublicacionRouter } = require('./routes/publications/publicacion.route')
 const { UsuarioRouter } = require('./routes/users/usuario.route');
@@ -12,8 +12,10 @@ const { TipoPublicacionRouter } = require('./routes/publications/tipo-publicacio
 
 let app = express();
 
+
 app.use(bodyParser.json());
 app.use(cors());
+
 
 app
     .use('/api', PublicacionRouter)

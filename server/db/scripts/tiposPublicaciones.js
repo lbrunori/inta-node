@@ -2,25 +2,29 @@ var tipoPublicaciones = [
     /* 1 */
     {
         "_id": ObjectId("598b71524cee1ed59c9ae5c0"),
-        "nombre": "Noticia"
+        "nombre": "Noticia",
+        "nombreDescriptivo": "Noticia"
     },
 
     /* 2 */
     {
         "_id": ObjectId("598b71524cee1ed59c9ae5c1"),
-        "nombre": "Estadisticas"
+        "nombre": "Estadisticas",
+        "nombreDescriptivo": "Estadísticas"
     },
 
     /* 3 */
     {
         "_id": ObjectId("598b71524cee1ed59c9ae5c2"),
-        "nombre": "InformacionTecnica"
+        "nombre": "InformacionTecnica",
+        "nombreDescriptivo": "Información Técnica"
     },
 
     /* 4 */
     {
         "_id": ObjectId("598b71524cee1ed59c9ae5c3"),
-        "nombre": "Proyectos"
+        "nombre": "Proyectos",
+        "nombreDescriptivo": "Proyectos"
     }
 ];
 
