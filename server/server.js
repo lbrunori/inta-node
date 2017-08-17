@@ -16,7 +16,6 @@ let app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-
 app
     .use('/api', PublicacionRouter)
     .use('/api', UsuarioRouter)

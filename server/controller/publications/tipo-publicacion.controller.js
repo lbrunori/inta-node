@@ -6,7 +6,8 @@ let getTiposPublicacion = (req, res) => {
     TipoPublicacion.find().then((tiposPublicacion) => {
         return res.send(tiposPublicacion);
     }).catch((err) => {
-        return res.status(404).send();
+        console.error(err);
+        return res.status(404).json({error_code: 6, err_desc: 'No se pudó recuperar los tipos de publicaciones'});
     })
 }
 
@@ -18,8 +19,9 @@ let saveTiposPublicacion = (req, res) => {
         .then((tp) => {
             res.send(tp);
         })
-        .catch((e) => {
-            res.statud(400).send();
+        .catch((err) => {
+            console.error(err);
+            res.statud(400).json({error_code: 5, err_desc: 'No se puedo almacenar el tipo de publicación'});
         })
 }
 

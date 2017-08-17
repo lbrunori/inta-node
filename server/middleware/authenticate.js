@@ -7,8 +7,15 @@ let authenticate = (req, res, next) => {
     let token = req.header('x-auth');
 
     Usuario.findByToken(token)
-        .then((usuario) => {
+        .populate('rol')
+        .exec((err, usuario) => {
+            if(err){
+                console.error(err);
+                return Promise.reject();
+            }
+        
             if (!usuario) {
+                console.error(err);
                 return Promise.reject();
             }
 
@@ -22,7 +29,6 @@ let authenticate = (req, res, next) => {
 }
 
 let hasRolAdmin = (req, res, next) => {
-    console.log(req.usuario);
     Usuario.findOne(req.usuario._id).populate('rol').exec((err, usuario) => {
         if (err) {
             res.status(401).send()

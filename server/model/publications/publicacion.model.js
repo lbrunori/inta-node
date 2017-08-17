@@ -44,6 +44,12 @@ let PublicacionSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'TipoPublicacion',
         required: true
+    },
+    fuente: {
+        required: false,
+        type: String,
+        minlegth: 5,
+        maxlength: 250
     }
 })
 

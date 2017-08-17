@@ -1,4 +1,4 @@
-const multer = require('multer')
+const multer = require('multer');
 
 var storage = multer.diskStorage({ //multers disk storage settings
     destination: function (req, file, cb) {
@@ -6,11 +6,13 @@ var storage = multer.diskStorage({ //multers disk storage settings
     },
     filename: function (req, file, cb) {
         var datetimestamp = Date.now();
-        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
+        cb(null, file.fieldname + '-' + datetimestamp + '.'
+            + file.originalname.split('.')[file.originalname.split('.').length
+            - 1]);
     }
 });
 
-var upload = multer({ //multer settings
+var upload = multer({
     storage: storage
 }).single('file');
 

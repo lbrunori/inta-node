@@ -25,6 +25,8 @@ let UsuarioSchema = new Schema({
         type: String,
         required: true,
         unique: true,
+        maxlength: 100,
+        minlength: 4,
         trim: true,
         validate: {
             validator: validator.isEmail,
@@ -34,7 +36,8 @@ let UsuarioSchema = new Schema({
     password: {
         type: String,
         required: true,
-        minlength: 6
+        minlength: 6,
+        maxlength: 100
     },
     rol: {
         type: Schema.ObjectId,
