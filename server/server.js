@@ -23,7 +23,7 @@ app
     .use('/api', TipoPublicacionRouter);
 
 app.listen(port, () => {
-    console.log('Started at port 3000');
+    console.log(`Started at port ${port}`);
 });
 
 module.exports = {

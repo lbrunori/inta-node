@@ -143,13 +143,18 @@ let updatePublicacion = (req, res) => {
         let id = req.params.id;
         let body = _.pick(req.body, ['titulo',
             'descripcion', 'contenido', 'fuente']);
-        body.tipoPublicacion = JSON.parse(req.body.tipoPublicacion);
+        if (typeof req.file === 'undefined') {
+            body.tipoPublicacion = req.body.tipoPublicacion;
+        } else {
+            body.tipoPublicacion =
+                body.tipoPublicacion = JSON.parse(req.body.tipoPublicacion);
+        }
 
         if (!ObjectID.isValid(id)) {
             return res.status(404).json({ error_code: 3, err_desc: 'ID no válido' });
         }
 
-        if (!typeof req.file.filaneme === 'undefined') {
+        if (typeof req.file === 'undefined') {
             Publicacion.findByIdAndUpdate(id, { $set: body }, { new: true }).then((publicacion) => {
                 res.send(publicacion);
             }, (err) => {
