@@ -32,9 +32,9 @@ let savePublicacion = (req, res) => {
 
             jimp.read(pathImage, function (err, image) {
                 if (err) throw err;
-                image.resize(720, 480)            // resize
-                    .quality(70)
-
+                image
+                    .resize(576, 324)            // resize
+                    .quality(50);
                 image.getBase64(jimp.MIME_PNG, (err, img) => {
                     body.imagenPortada = img;
                     let publicacion = new Publicacion(body);
