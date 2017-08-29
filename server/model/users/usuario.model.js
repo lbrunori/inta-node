@@ -69,7 +69,7 @@ UsuarioSchema.methods.generateAuthToken = function () {
         {
             _id: user._id.toHexString(),
             access
-        }, 'abc123',{expiresIn: 7200 }).toString();
+        }, 'abc123', { expiresIn: 7200 }).toString();
 
     user.tokens.push({ access, token });
 
@@ -116,6 +116,18 @@ UsuarioSchema.statics.findByCredentials = function (email, password) {
                 })
             })
         })
+}
+
+UsuarioSchema.methods.removeToken = function (token) {
+    var user = this;
+
+    return user.update({
+        $pull: {
+            tokens: {
+                token
+            }
+        }
+    })
 }
 
 UsuarioSchema.pre('save', function (next) {

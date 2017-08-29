@@ -15,6 +15,22 @@ let TipoPublicacion = new Schema({
     }
 })
 
+TipoPublicacion.statics.findByNombre = function (nombre) {
+
+    let TipoPublicacion = this;
+
+    return TipoPublicacion.findOne({ nombre })
+        .then((tipoPublicacion) => {
+            if (!tipoPublicacion) {
+                return Promise.reject();
+            }
+
+            return new Promise((resolve, reject) => {
+                resolve(tipoPublicacion);
+            })
+        })
+}
+
 let TipoPublicacionModel = mongoose.model('TipoPublicacion', TipoPublicacion)
 
 module.exports = {

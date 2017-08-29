@@ -32,7 +32,7 @@ let PublicacionSchema = new Schema({
         required: true,
         trim: true,
         minlength: 10,
-        maxlength: 255
+        maxlength: 1000
     },
     contenido: {
         type: String,

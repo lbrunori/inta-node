@@ -6,17 +6,18 @@ let authenticate = (req, res, next) => {
 
     let token = req.header('x-auth');
 
+    if (!token) { return res.status(401).send() }
     Usuario.findByToken(token)
         .populate('rol')
         .exec((err, usuario) => {
-            if(err){
+            if (err) {
                 console.error(err);
-                return Promise.reject();
+                return res.status(401).send();
             }
-        
+
             if (!usuario) {
-                console.error(err);
-                return Promise.reject();
+                console.error("No hay usuario");
+                return res.status(401).send();
             }
 
             req.usuario = usuario;
@@ -43,9 +44,6 @@ let hasRolAdmin = (req, res, next) => {
         } else {
             res.status(401).send()
         }
-
-
-
     });
 
 }

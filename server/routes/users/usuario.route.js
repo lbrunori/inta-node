@@ -9,10 +9,13 @@ UsuarioRouter
     .route('/usuarios')
     .post(usuarioController.saveUsuario)
     .put(authenticate, hasRolAdmin, usuarioController.updateUsuario)
-    .get(authenticate, hasRolAdmin, usuarioController.getUsuarios)
+    .get(authenticate, hasRolAdmin, usuarioController.getUsuarios);
 UsuarioRouter
     .route('/usuarios/me')
     .get(authenticate, usuarioController.userMe);
+UsuarioRouter
+    .route('/usuarios/me/logout')
+    .delete(authenticate, usuarioController.logout);
 UsuarioRouter
     .route('/usuarios/login')
     .post(usuarioController.login);

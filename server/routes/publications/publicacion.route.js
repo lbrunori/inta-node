@@ -1,7 +1,7 @@
 const express = require("express");
 
 const PublicacionRouter = express.Router();
-const {authenticate} = require('./../../middleware/authenticate');
+const { authenticate } = require('./../../middleware/authenticate');
 
 const publicacionController = require(
     './../../controller/publications/publicacion.controller')
@@ -11,15 +11,19 @@ PublicacionRouter
 PublicacionRouter
     .route('/publicaciones/publicas/:id')
     .get(publicacionController.getPublicacionPublica);
+
+PublicacionRouter
+    .route('/publicaciones/:tipo/publicas')
+    .get(publicacionController.getPublicacionesPublicasPorTipo);
 PublicacionRouter
     .route('/publicaciones')
     .post(authenticate, publicacionController.savePublicacion)
-    .get(authenticate, publicacionController.getPublicaciones)
-    .put(authenticate, publicacionController.updatePublicacion);
+    .get(authenticate, publicacionController.getPublicaciones);
 PublicacionRouter
     .route('/publicaciones/:id')
     .get(authenticate, publicacionController.getPublicacion)
-    .delete(authenticate, publicacionController.deletePublicacion);
+    .delete(authenticate, publicacionController.deletePublicacion)
+    .put(authenticate, publicacionController.updatePublicacion);
 
 module.exports = {
     PublicacionRouter

@@ -1,42 +1,59 @@
-const {ObjectID} = require('mongodb');
+const { ObjectID } = require('mongodb');
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
-const sharp = require('sharp');
-const {upload} = require('./../../middleware/uploader');
+const jimp = require('jimp');
+const { upload } = require('./../../middleware/uploader');
 
 const Publicacion = require(
     './../../model/publications/publicacion.model').PublicacionModel;
+const TipoPublicacion = require(
+    './../../model/publications/tipo-publicacion.model').TipoPublicacionModel;
 
 let savePublicacion = (req, res) => {
-    console.log(req);
+    let pathImagen = "";
     upload(req, res, (err) => {
         if (err) {
             console.error(err);
-            res.status(404).json(
+            return res.status(404).json(
                 {
                     error_code: 1,
                     err_desc: 'Error al almacenar imagen en disco.'
                 });
-        }
-        ;
+        };
 
         let body = _.pick(req.body,
             ['titulo', 'descripcion', 'contenido', 'fuente']);
         body.creador = req.usuario;
         body.tipoPublicacion = JSON.parse(req.body.tipoPublicacion);
-        body.imagenPortada = req.file.filename;
 
-        let publicacion = new Publicacion(body);
+        pathImage = path.join(__dirname, '..', '..', 'images-uploaded') + '/' + req.file.filename;
+        try {
 
-        publicacion.save().then((publicacion) => {
-            res.send(publicacion);
-        }, (err) => {
-            console.error(err);
+            jimp.read(pathImage, function (err, image) {
+                if (err) throw err;
+                image.resize(720, 480)            // resize
+                    .quality(70)
+
+                image.getBase64(jimp.MIME_PNG, (err, img) => {
+                    body.imagenPortada = img;
+                    let publicacion = new Publicacion(body);
+                    fs.unlink(pathImage);
+                    publicacion.save().then((publicacion) => {
+                        res.send(publicacion);
+                    }, (err) => {
+                        console.error(err);
+                        res.status(400).json(
+                            { error_code: 2, err_desc: 'Erro al almacenar imagen en db' });
+                    })
+                })
+            });
+        }
+        catch (e) {
+            console.error(e);
             res.status(400).json(
-                {error_code: 2, err_desc: 'Erro al almacenar imagen en db'});
-        })
-
+                { error_code: 4, err_desc: 'Error al recuperar la imagen' });
+        }
     });
 }
 
@@ -44,17 +61,17 @@ let getPublicacion = (req, res) => {
     var id = req.params.id;
     if (!ObjectID.isValid(id)) {
         return res.status(404).json(
-            {error_code: 3, err_desc: 'ID no válido'});
+            { error_code: 3, err_desc: 'ID no válido' });
     }
 
     Publicacion.findById(id)
-    .populate('tipoPublicacion')
-    .populate('creador')
-    .lean()
-    .exec((err, publicacion) => {
+        .populate('tipoPublicacion')
+        .populate('creador')
+        .lean()
+        .exec((err, publicacion) => {
             if (!publicacion) {
                 return res.status(404).json(
-                    {error_code: 4, err_desc: 'Publicacion no encontrada'});
+                    { error_code: 4, err_desc: 'Publicacion no encontrada' });
             }
             if (publicacion.creador._id !== req.usuario._id
                 && req.usuario.rol.nombre !== 'admin') {
@@ -63,100 +80,119 @@ let getPublicacion = (req, res) => {
                     err_desc: 'No autorizado para acceder a la publicacion'
                 });
             }
+            res.send({ publicacion });
 
-            let pathImage = path.join(__dirname, '..', '..', 'images-uploaded')
-            try {
-                fs.readFile(`${pathImage}/${publicacion.imagenPortada}`,
-                    (err, imagen) => {
-                        if (!imagen) {
-                            throw new Error('Imagen no encontrada en directorio')
-                        }
-                        ;
-
-                        sharp(imagen)
-                        .toBuffer()
-                        .then(data => {
-                            //contenido = data.toString('base64')
-                            //imagen = 'data:image/jpeg;base64,' + contenido;
-                            let imagenPortadaBase64 = `data:image/${publicacion.imagenPortada.split(
-                                '.').pop()};base64,`
-                                + new Buffer(data).toString('base64');
-                            publicacion.imagenPortadaBase64 = imagenPortadaBase64;
-                            delete publicacion.imagenPortada;
-                            res.send({publicacion});
-                        })
-                    })
-            }
-            catch
-                (e) {
-                console.error(e);
-                res.status(400).json(
-                    {error_code: 4, err_desc: 'Error al recuperar la imagen'});
-            }
         }
-    ).catch((e) => {
-        res.status(400).json(
-            {error_code: 4, err_desc: 'Error al obtener publicación.'});
-    });
+        ).catch((e) => {
+            res.status(400).json(
+                { error_code: 4, err_desc: 'Error al obtener publicación.' });
+        });
 }
 
 let getPublicaciones = (req, res) => {
-    let objQuery = {'creador': req.usuario._id};
+    let objQuery = { 'creador': req.usuario._id };
     if (req.usuario.rol.nombre === 'admin') {
         objQuery = {}
     }
     Publicacion.find(objQuery)
-    .populate('tipoPublicacion')
-    .populate('creador')
-    .exec((err, publicaciones) => {
-        if (err) {
-            res.status(400).json(
-                {error_code: 4, err_desc: 'Publicacion no encontrada'});
-        }
-        ;
+        .populate('tipoPublicacion')
+        .populate('creador')
+        .exec((err, publicaciones) => {
+            if (err) {
+                res.status(400).json(
+                    { error_code: 4, err_desc: 'Publicacion no encontrada' });
+            }
+            ;
 
-        let respuesta = publicaciones.map((elem) => {
-            return _.pick(elem, 'titulo', 'fechaCreacion', 'tipoPublicacion',
-                'creador', '_id');
+            let respuesta = publicaciones.map((elem) => {
+                return _.pick(elem, 'titulo', 'fechaCreacion', 'tipoPublicacion',
+                    'creador', '_id');
+            })
+
+            res.send(respuesta);
         })
-
-        res.send(respuesta);
-    })
 }
 
 let deletePublicacion = (req, res) => {
     var id = req.params.id;
     if (!ObjectID.isValid(id)) {
-        return res.status(404).json({error_code: 3, err_desc: 'ID no válido'});
+        return res.status(404).json({ error_code: 3, err_desc: 'ID no válido' });
     }
 
     Publicacion.findByIdAndRemove(id)
-    .then((resp) => {
-        res.send();
-    }).catch((err) => {
-        res.status(400).send();
-    });
+        .then((resp) => {
+            res.send();
+        }).catch((err) => {
+            res.status(400).send();
+        });
 
 }
 
 let updatePublicacion = (req, res) => {
-    let id = req.body._id;
-    let body = _.pick(req.body, ['titulo',
-        'descripcion', 'contenido', 'tipoPublicacion']);
-    body.creador = req.usuario;
+    let pathImagen = "";
+    upload(req, res, (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(404).json(
+                {
+                    error_code: 1,
+                    err_desc: 'Error al almacenar imagen en disco.'
+                });
+        };
 
-    if (!ObjectID.isValid(id)) {
-        return res.status(404).json({error_code: 3, err_desc: 'ID no válido'});
-    }
+        let id = req.params.id;
+        let body = _.pick(req.body, ['titulo',
+            'descripcion', 'contenido', 'fuente']);
+        body.tipoPublicacion = JSON.parse(req.body.tipoPublicacion);
 
-}
+        if (!ObjectID.isValid(id)) {
+            return res.status(404).json({ error_code: 3, err_desc: 'ID no válido' });
+        }
+
+        if (!typeof req.file.filaneme === 'undefined') {
+            Publicacion.findByIdAndUpdate(id, { $set: body }, { new: true }).then((publicacion) => {
+                res.send(publicacion);
+            }, (err) => {
+                console.error(err);
+                res.status(400).json(
+                    { error_code: 2, err_desc: 'Erro al almacenar imagen en db' });
+            })
+        } else {
+            pathImage = path.join(__dirname, '..', '..', 'images-uploaded') + '/' + req.file.filename;
+            try {
+                jimp.read(pathImage, function (err, image) {
+                    if (err) throw err;
+                    image.resize(720, 480).quality(70)
+
+                    image.getBase64(jimp.MIME_PNG, (err, img) => {
+                        body.imagenPortada = img;
+                        fs.unlink(pathImage);
+                        Publicacion.findByIdAndUpdate(id, { $set: body }, { new: true }).then((publicacion) => {
+                            res.send(publicacion);
+                        }, (err) => {
+                            console.error(err);
+                            res.status(400).json(
+                                { error_code: 2, err_desc: 'Erro al almacenar imagen en db' });
+                        })
+                    })
+                });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(400).json(
+                    { error_code: 4, err_desc: 'Error al recuperar la imagen' });
+            }
+        }
+    })
+};
+
 
 let saveUpdatePublicacion = (id, body) => {
-    Publicacion.findByIdAndUpdate(id, {$set: body}, {new: true}).then(
+    Publicacion.findByIdAndUpdate(id, { $set: body }, { new: true }).then(
         (publicacion) => {
             if (!publicacion) {
                 return res.status(404).json(
-                    {error_code: 4, err_desc: 'Publicacion no encontrada'});
+                    { error_code: 4, err_desc: 'Publicacion no encontrada' });
             }
             res.send(publicacion);
         });
@@ -164,90 +200,56 @@ let saveUpdatePublicacion = (id, body) => {
 
 let getPublicacionesPublicas = (req, res) => {
     Publicacion.find()
-    .populate('tipoPublicacion')
-    .lean()
-    .exec((err, publicaciones) => {
-        if (err) {
-            res.status(400).json(
-                {error_code: 4, err_desc: 'Publicacion no encontrada'});
-        }
-        ;
+        .populate('tipoPublicacion')
+        .lean()
+        .exec((err, publicaciones) => {
+            if (err) {
+                res.status(400).json(
+                    { error_code: 4, err_desc: 'Publicacion no encontrada' });
+            };
 
-        var promesasFS = publicaciones.map((publicacion) => {
-            return new Promise((resolve, reject) => {
-                let pathImage = path.join(__dirname, '..', '..',
-                    'images-uploaded')
-                fs.readFile(`${pathImage}/${publicacion.imagenPortada}`,
-                    (err, imagen) => {
-                        if (!imagen) {
-                            throw new Error(
-                                'Imagen no encontrada en directorio')
-                        }
-                        ;
+            res.send(publicaciones);
 
-                        let imagenPortadaBase64 = `data:image/${publicacion.imagenPortada.split(
-                            '.').pop()};base64,`
-                            + new Buffer(imagen).toString('base64');
-                        publicacion.imagenPortadaBase64 = imagenPortadaBase64;
-                        delete publicacion.imagenPortada;
-                        resolve(publicacion);
-                    })
-            })
-        })
-
-        Promise.all(promesasFS).then((resultado) => {
-            res.send(resultado);
-        })
-    });
+        });
 }
 
 let getPublicacionPublica = (req, res) => {
     var id = req.params.id;
     if (!ObjectID.isValid(id)) {
         return res.status(404).json(
-            {error_code: 3, err_desc: 'ID no válido'});
+            { error_code: 3, err_desc: 'ID no válido' });
     }
 
     Publicacion.findById(id)
-    .populate('tipoPublicacion')
-    .lean()
-    .exec((err, publicacion) => {
-        if (!publicacion) {
-            return res.status(404).json(
-                {error_code: 4, err_desc: 'Publicacion no encontrada'});
-        }
+        .populate('tipoPublicacion')
+        .lean()
+        .exec((err, publicacion) => {
+            if (!publicacion) {
+                return res.status(404).json(
+                    { error_code: 4, err_desc: 'Publicacion no encontrada' });
+            }
 
-        let pathImage = path.join(__dirname, '..', '..', 'images-uploaded')
-        try {
-            fs.readFile(`${pathImage}/${publicacion.imagenPortada}`,
-                (err, imagen) => {
-                    if (!imagen) {
-                        throw new Error(
-                            'Imagen no encontrada en directorio')
-                    }
-                    ;
+            res.send(publicacion);
+        }).catch(() => {
+            res.status(400).send();
+        });
+}
 
-                    sharp(imagen)
-                    .toBuffer()
-                    .then(data => {
-                        //contenido = data.toString('base64')
-                        //imagen = 'data:image/jpeg;base64,' + contenido;
-                        let imagenPortadaBase64 = `data:image/${publicacion.imagenPortada.split(
-                            '.').pop()};base64,`
-                            + new Buffer(data).toString('base64');
-                        publicacion.imagenPortadaBase64 = imagenPortadaBase64;
-                        delete publicacion.imagenPortada;
-                        res.send({publicacion});
-                    })
-                })
-        } catch (e) {
-            console.error(e);
-            res.status(400).json(
-                {error_code: 4, err_desc: 'Error al recuperar la imagen'});
-        }
-    }).catch(() => {
-        res.status(400).send();
-    });
+let getPublicacionesPublicasPorTipo = (req, res) => {
+    TipoPublicacion
+        .findByNombre(req.params.tipo)
+        .then((resp) => {
+            console.log('Respuesta: ', resp)
+            return Publicacion.find({
+                'tipoPublicacion': resp._id
+            })
+        })
+        .then((publicaciones) => {
+            if (!publicaciones) {
+                res.status(404).send();
+            }
+            res.send(publicaciones);
+        })
 }
 
 module.exports = {
@@ -257,7 +259,7 @@ module.exports = {
     deletePublicacion,
     updatePublicacion,
     getPublicacionPublica,
-    getPublicacionesPublicas
+    getPublicacionesPublicas,
+    getPublicacionesPublicasPorTipo
 }
 
-    
