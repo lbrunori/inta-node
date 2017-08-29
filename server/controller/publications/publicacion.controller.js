@@ -226,6 +226,7 @@ let getPublicacionPublica = (req, res) => {
     }
 
     Publicacion.findById(id)
+        .sort({ '_id': -1 })
         .populate('tipoPublicacion')
         .lean()
         .exec((err, publicacion) => {
@@ -247,7 +248,14 @@ let getPublicacionesPublicasPorTipo = (req, res) => {
             console.log('Respuesta: ', resp)
             return Publicacion.find({
                 'tipoPublicacion': resp._id
-            })
+            }, [], {
+                    skip: 0, // Starting Row
+                    limit: 10, // Ending Row
+                    sort: {
+                        fechaCreacion: -1 //Sort by Date Added DESC
+                    }
+                })
+
         })
         .then((publicaciones) => {
             if (!publicaciones) {
