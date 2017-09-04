@@ -33,8 +33,8 @@ let savePublicacion = (req, res) => {
             jimp.read(pathImage, function (err, image) {
                 if (err) throw err;
                 image
-                    .resize(576, 324)            // resize
-                    .quality(50);
+                    .resize(480, 324)            // resize
+                    .quality(40);
                 image.getBase64(jimp.MIME_PNG, (err, img) => {
                     body.imagenPortada = img;
                     let publicacion = new Publicacion(body);
@@ -248,7 +248,7 @@ let getPublicacionesPublicasPorTipo = (req, res) => {
             console.log('Respuesta: ', resp)
             return Publicacion.find({
                 'tipoPublicacion': resp._id
-            }, [], {
+            }, ['titulo', 'descripcion', 'imagenPortada'], {
                     skip: 0, // Starting Row
                     limit: 10, // Ending Row
                     sort: {
