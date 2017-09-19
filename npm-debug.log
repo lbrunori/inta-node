@@ -9,7 +9,7 @@
 6 silly lifecycle inta@1.0.0~prestart: no script for prestart, continuing
 7 info lifecycle inta@1.0.0~start: inta@1.0.0
 8 verbose lifecycle inta@1.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle inta@1.0.0~start: PATH: /home/lbrunori/.nvm/versions/node/v6.11.0/lib/node_modules/npm/bin/node-gyp-bin:/home/lbrunori/Práctica supervisada/backend/inta/node_modules/.bin:/home/lbrunori/anaconda3/bin:/home/lbrunori/.nvm/versions/node/v6.11.0/bin:/home/lbrunori/bin:/home/lbrunori/.local/bin:/home/lbrunori/anaconda3/bin:/home/lbrunori/bin:/home/lbrunori/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/lbrunori/Aplicaciones/Android/Sdk/tools:/home/lbrunori/Aplicaciones/Android/Sdk/platform-tools:/home/lbrunori/Aplicaciones/Android/Sdk/tools:/home/lbrunori/Aplicaciones/Android/Sdk/platform-tools
+9 verbose lifecycle inta@1.0.0~start: PATH: /home/lbrunori/.nvm/versions/node/v6.11.0/lib/node_modules/npm/bin/node-gyp-bin:/home/lbrunori/Práctica supervisada/backend/inta/node_modules/.bin:/home/lbrunori/anaconda3/bin:/home/lbrunori/.nvm/versions/node/v6.11.0/bin:/home/lbrunori/bin:/home/lbrunori/.local/bin:/home/lbrunori/.sdkman/candidates/springboot/current/bin:/home/lbrunori/anaconda3/bin:/home/lbrunori/bin:/home/lbrunori/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/lbrunori/Aplicaciones/Android/Sdk/tools:/home/lbrunori/Aplicaciones/Android/Sdk/platform-tools:/home/lbrunori/Aplicaciones/Android/Sdk/tools:/home/lbrunori/Aplicaciones/Android/Sdk/platform-tools
 10 verbose lifecycle inta@1.0.0~start: CWD: /home/lbrunori/Práctica supervisada/backend/inta
 11 silly lifecycle inta@1.0.0~start: Args: [ '-c', 'node server/server.js' ]
 12 silly lifecycle inta@1.0.0~start: Returned: code: 1  signal: null
@@ -26,7 +26,7 @@
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
 15 verbose pkgid inta@1.0.0
 16 verbose cwd /home/lbrunori/Práctica supervisada/backend/inta
-17 error Linux 4.10.0-33-generic
+17 error Linux 4.10.0-35-generic
 18 error argv "/home/lbrunori/.nvm/versions/node/v6.11.0/bin/node" "/home/lbrunori/.nvm/versions/node/v6.11.0/bin/npm" "start"
 19 error node v6.11.0
 20 error npm  v3.10.10

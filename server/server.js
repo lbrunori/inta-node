@@ -23,6 +23,12 @@ app
     .use('/api', TipoPublicacionRouter);
 
 app.listen(port, () => {
+    var fs = require('fs');
+    var dir = `${__dirname}/images-uploaded`;
+
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
     console.log(`Started at port ${port}`);
 });
 
